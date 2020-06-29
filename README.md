@@ -1,5 +1,5 @@
 The following are the details of the experiments conducted with the Wilson-Cowan nervous oscillator model
-#EXPERIMENT 1
+# EXPERIMENT 1
 This experiment involves testing the implmented model for a Wilson-Cowan nervous oscillator model consisting of only a single unit of the exitatory and inhibitory neuron pair.
 The following are the values of the parameters used to obtain the plot
 - a = 5.6
