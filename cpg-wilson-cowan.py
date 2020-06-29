@@ -3,7 +3,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 class CPGWilsonCowan(object):
-    def __init__(self, Tu, Tv, a, b, c, d, Su, Sv, mu, p,W, f = np.tanh, num = 4, dt = 0.01, n = 1000000):
+    def __init__(self, Tu, Tv, a, b, c, d, Su, Sv, mu, p,W, f = np.tanh, num = 4, dt = 0.001, n = 1000000):
         self.num = num
         self.Tu = Tu
         self.Tv = Tv
@@ -74,23 +74,29 @@ class CPGWilsonCowan(object):
         labels = []
         fig, axes = plt.subplots(3, 2, figsize=(10, 15))
         for i in range(self.num):
-            axes[0, 0].plot(self.t[-500:], self.Au[-500:, i])
-            axes[0, 1].plot(self.t[:500], self.Au[:500, i])
+            axes[0, 0].plot(self.t[-5000:], self.Au[-5000:, i])
+            axes[0, 1].plot(self.t[:5000], self.Au[:5000, i])
             labels.append('neuron_'+str(i))
+        axes[0, 0].set_ylabel('u steady')
+        axes[0, 1].set_ylabel('u initial') 
         axes[0, 0].legend(labels, loc = 'upper left')
         axes[0, 1].legend(labels, loc = 'upper left')
         labels = []
         for i in range(self.num):
-            axes[1, 0].plot(self.t[-500:], self.Ay[-500:, i])
-            axes[1, 1].plot(self.t[:500], self.Av[:500, i])
+            axes[1, 0].plot(self.t[-5000:], self.Ay[-5000:, i])
+            axes[1, 1].plot(self.t[:5000], self.Av[:5000, i])
             labels.append('neuron_'+str(i))
         axes[1, 0].legend(labels, loc = 'upper left')
         axes[1, 1].legend(labels, loc = 'upper left')
+        axes[1, 0].set_ylabel('v steady')
+        axes[1, 1].set_ylabel('v initial') 
         labels = []
         for i in range(self.num):
-            axes[2, 0].plot(self.t[-500:], self.Ay[-500:, i])
-            axes[2, 1].plot(self.t[:500], self.Ay[:500, i])
+            axes[2, 0].plot(self.t[-5000:], self.Ay[-5000:, i])
+            axes[2, 1].plot(self.t[:5000], self.Ay[:5000, i])
             labels.append('neuron_'+str(i))
+        axes[2, 0].set_ylabel('y steady')
+        axes[2, 1].set_ylabel('y initial') 
         axes[2, 0].legend(labels, loc = 'upper left')
         axes[2, 1].legend(labels, loc = 'upper left')
         fig.savefig('plots/cpg_wilson_cowan_exp1.png')

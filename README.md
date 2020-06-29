@@ -87,5 +87,6 @@ All neuron models are similar
 - W = walking gait connection matrix
 - p = 0.5
 
+
 The following plot depicts the results of the experiment:
 ![](plots/cpg_wilson_cowan_exp1.png)
