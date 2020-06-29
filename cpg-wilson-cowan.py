@@ -3,7 +3,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 class CPGWilsonCowan(object):
-    def __init__(self, Tu, Tv, a, b, c, d, Su, Sv, mu, p,W, f = np.tanh, num = 4, dt = 0.001, n = 10000000):
+    def __init__(self, Tu, Tv, a, b, c, d, Su, Sv, mu, p,W, f = np.tanh, num = 4, dt = 0.01, n = 1000000):
         self.num = num
         self.Tu = Tu
         self.Tv = Tv
@@ -15,8 +15,8 @@ class CPGWilsonCowan(object):
         self.Sv = Sv
         self.f = f 
         self.mu = mu
-        self.u = np.zeros((self.num,))
-        self.v = np.zeros((self.num,))
+        self.u = np.random.random((self.num,))
+        self.v = np.random.random((self.num,))
         self.n = n 
         self.p = p
         self.W = W
@@ -24,6 +24,7 @@ class CPGWilsonCowan(object):
         self.Av = np.zeros((self.n, self.num))
         self.Ay = np.zeros((self.n, self.num))
         self.dt = dt 
+        self.t = np.arange(0, self.n)*dt
 
     def du(self):
         du = np.zeros((self.num,))
@@ -31,7 +32,7 @@ class CPGWilsonCowan(object):
             temp = 0.0
             for j in range(self.num):
                 temp += self.W[i][j]*self.u[j]
-            du[i] = (self.f(self.a*self.u[i] - self.b*self.v[i] + temp + self.Su[i]) - self.u[i])/self.Tu[i]
+            du[i] = (self.f(self.mu[i]*(self.a[i]*self.u[i] - self.b[i]*self.v[i] + temp + self.Su[i])) - self.u[i])/self.Tu[i]
         return du
 
     def dv(self):
@@ -40,7 +41,7 @@ class CPGWilsonCowan(object):
             temp = 0.0 
             for j in range(self.num):
                 temp += self.W[i][j]*self.v[j]
-            dv[i] = (self.f(self.c*self.u[i] - self.d*self.v[i] + temp + self.Sv[i]) - self.v[i])/self.Tv[i]
+            dv[i] = (self.f(self.mu[i]*(self.c[i]*self.u[i] - self.d[i]*self.v[i] + temp + self.Sv[i])) - self.v[i])/self.Tv[i]
         return dv
 
     def simulate(self, disturb_time = None, gait_transition = None ):
@@ -68,3 +69,45 @@ class CPGWilsonCowan(object):
 
     def set_W(self, W):
         self.W = W
+    
+    def plot(self):
+        labels = []
+        fig, axes = plt.subplots(3, 2, figsize=(10, 15))
+        for i in range(self.num):
+            axes[0, 0].plot(self.t[-500:], self.Au[-500:, i])
+            axes[0, 1].plot(self.t[:500], self.Au[:500, i])
+            labels.append('neuron_'+str(i))
+        axes[0, 0].legend(labels, loc = 'upper left')
+        axes[0, 1].legend(labels, loc = 'upper left')
+        labels = []
+        for i in range(self.num):
+            axes[1, 0].plot(self.t[-500:], self.Ay[-500:, i])
+            axes[1, 1].plot(self.t[:500], self.Av[:500, i])
+            labels.append('neuron_'+str(i))
+        axes[1, 0].legend(labels, loc = 'upper left')
+        axes[1, 1].legend(labels, loc = 'upper left')
+        labels = []
+        for i in range(self.num):
+            axes[2, 0].plot(self.t[-500:], self.Ay[-500:, i])
+            axes[2, 1].plot(self.t[:500], self.Ay[:500, i])
+            labels.append('neuron_'+str(i))
+        axes[2, 0].legend(labels, loc = 'upper left')
+        axes[2, 1].legend(labels, loc = 'upper left')
+        fig.savefig('plots/cpg_wilson_cowan_exp1.png')
+
+
+W = np.full((4,4), -0.1)
+for i in range(4):
+    W[i][i] = 0.0
+Tu = np.full((4,), 0.2)
+Tv = np.full((4,), 0.2)
+a = np.full((4,), 5.6)
+b = np.full((4,), 5.6)
+c = np.full((4,), 2.4)
+d = np.full((4,), -2.4)
+Su = np.full((4,), 0.02)
+Sv = np.full((4,), 0.02)
+mu = np.full((4,), 1)
+osc = CPGWilsonCowan(Tu = Tu, Tv = Tv, a = a, d = d, b = b, c = c, Su = Su, Sv = Sv, mu = mu, p = 0.5, W = W) 
+osc.simulate()#disturb_time = 5000000)
+osc.plot()
