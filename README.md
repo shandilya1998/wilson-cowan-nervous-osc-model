@@ -10,4 +10,16 @@ The following are the values of the parameters used to obtain the plot
 - Tv = 0.2
 - Su = 0.02
 - Sv = 0.02
-- mu = 1 
+- mu = 1
+
+# EXPERIMENT 2
+The following are the values of the parameters used to obtain the plot
+- a = 5.6 
+- b = 5.6 
+- c = 2.4 
+- d = -2.4
+- Tu = 1 
+- Tv = 0.2 
+- Su = 0.02
+- Sv = 0.02
+- mu = 1  
