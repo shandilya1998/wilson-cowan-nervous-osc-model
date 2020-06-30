@@ -3,7 +3,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 class CPGWilsonCowan(object):
-    def __init__(self, Tu, Tv, a, b, c, d, Su, Sv, mu, p,W, f = np.tanh, num = 4, dt = 0.001, n = 1000000):
+    def __init__(self, Tu, Tv, a, b, c, d, Su, Sv, mu, p,W, f = np.tanh, num = 4, dt = 0.0001, n = 1000000):
         self.num = num
         self.Tu = Tu
         self.Tv = Tv
@@ -61,6 +61,12 @@ class CPGWilsonCowan(object):
                 self.W[2][0] = -self.W[2][0]
                 self.W[3][2] = -self.W[3][2]
 
+    def get_u(self):
+        return self.u + self.dt*self.du()
+
+    def get_v(self):
+        return self.v + self.dt*self.dv()     
+
     def set_u(self, u):
         self.u = u
     
@@ -74,8 +80,8 @@ class CPGWilsonCowan(object):
         labels = []
         fig, axes = plt.subplots(3, 2, figsize=(10, 15))
         for i in range(self.num):
-            axes[0, 0].plot(self.t[-5000:], self.Au[-5000:, i])
-            axes[0, 1].plot(self.t[:5000], self.Au[:5000, i])
+            axes[0, 0].plot(self.t[-50000:], self.Au[-50000:, i])
+            axes[0, 1].plot(self.t[:50000], self.Au[:50000, i])
             labels.append('neuron_'+str(i))
         axes[0, 0].set_ylabel('u steady')
         axes[0, 1].set_ylabel('u initial') 
@@ -83,8 +89,8 @@ class CPGWilsonCowan(object):
         axes[0, 1].legend(labels, loc = 'upper left')
         labels = []
         for i in range(self.num):
-            axes[1, 0].plot(self.t[-5000:], self.Ay[-5000:, i])
-            axes[1, 1].plot(self.t[:5000], self.Av[:5000, i])
+            axes[1, 0].plot(self.t[-50000:], self.Ay[-50000:, i])
+            axes[1, 1].plot(self.t[:50000], self.Av[:50000, i])
             labels.append('neuron_'+str(i))
         axes[1, 0].legend(labels, loc = 'upper left')
         axes[1, 1].legend(labels, loc = 'upper left')
@@ -92,15 +98,14 @@ class CPGWilsonCowan(object):
         axes[1, 1].set_ylabel('v initial') 
         labels = []
         for i in range(self.num):
-            axes[2, 0].plot(self.t[-5000:], self.Ay[-5000:, i])
-            axes[2, 1].plot(self.t[:5000], self.Ay[:5000, i])
+            axes[2, 0].plot(self.t[-50000:], self.Ay[-50000:, i])
+            axes[2, 1].plot(self.t[:50000], self.Ay[:50000, i])
             labels.append('neuron_'+str(i))
         axes[2, 0].set_ylabel('y steady')
         axes[2, 1].set_ylabel('y initial') 
         axes[2, 0].legend(labels, loc = 'upper left')
         axes[2, 1].legend(labels, loc = 'upper left')
-        fig.savefig('plots/cpg_wilson_cowan_exp1.png')
-
+        fig.savefig('plots/cpg_wilson_cowan_exp2.png')
 
 W = np.full((4,4), -0.1)
 for i in range(4):
@@ -115,5 +120,5 @@ Su = np.full((4,), 0.02)
 Sv = np.full((4,), 0.02)
 mu = np.full((4,), 1)
 osc = CPGWilsonCowan(Tu = Tu, Tv = Tv, a = a, d = d, b = b, c = c, Su = Su, Sv = Sv, mu = mu, p = 0.5, W = W) 
-osc.simulate()#disturb_time = 5000000)
+osc.simulate(gait_transition = 0)#disturb_time = 5000000)
 osc.plot()
