@@ -87,6 +87,24 @@ All neuron models are similar
 - W = walking gait connection matrix
 - p = 0.5
 
-
 The following plot depicts the results of the experiment:
 ![](plots/cpg_wilson_cowan_exp1.png)
+
+# EXPERIMENT 6
+The following are the values of the parameters used to obtain the plot
+All neuron models are similar
+- a = 5.6 
+- b = 5.6 
+- c = 2.4 
+- d = -2.4
+- Tu = 0.2 
+- Tv = 1 
+- Su = 0.02
+- Sv = 0.02
+- mu = 1   
+- f = tanh(x)
+- W = trotting gait connection matrix
+- p = 0.5 
+
+The following plot depicts the results of the experiment:
+![](plots/cpg_wilson_cowan_exp2.png)
