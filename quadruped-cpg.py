@@ -35,6 +35,9 @@ class QuadCPG(object):
                     self.y_k[j] = self.alpha_k*self.A_k*(1-(self.y_h[j]/(self.alpha_h*self.A_h))**2)
             self.u_h = self.base_cpg.get_u()
             self.v_h = self.base_cpg.get_v()
+            if i == self.base_cpg.n -25000:
+                self.u_h = np.random.random((self.base_cpg.num,))
+                self.v_h = np.random.random((self.base_cpg.num,))
             self.base_cpg.set_u(self.u_h)
             self.base_cpg.set_v(self.v_h)
             self.y_h = self.base_cpg.p*(self.u_h - self.v_h)
@@ -46,7 +49,7 @@ class QuadCPG(object):
             axes[i].plot(self.base_cpg.t[-50000:], self.Arr_y_h[-50000:, i])
             axes[i].plot(self.base_cpg.t[-50000:], self.Arr_y_k[-50000:, i])
         plt.show()
-        fig.savefig('plots/cpg_quad_exp1.png')
+        fig.savefig('plots/cpg_quad_exp2.png')
 
 cpg = QuadCPG(alpha_k = 1, alpha_h = 0.75, base_cpg = osc, A_h = 1, A_k = 0.91)
 cpg.simulate()
