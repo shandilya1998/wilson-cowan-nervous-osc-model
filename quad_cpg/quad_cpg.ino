@@ -83,35 +83,37 @@ void setup() {
   Su=0.02;
   Sv=0.02;
   p=0.5;
-  A_h=1;
+  mu=1.0;
+  A_h=1.0;
   A_k=0.91;
-  alpha_k=1;
+  alpha_k=1.0;
   alpha_h=0.75;
-  R_h=15.55;
-  R_k=11.12;
+  R_h=35.55;
+  R_k=21.12;
   X=0.0;
-  mu=1;
-  nextLoop = micros() + LPERIOD;
+  
+  nextLoop=micros()+LPERIOD;
 }
 
 void set_du_dv(){
-  for(i=0; i<N; i++){
+  for(i=0;i<N;i++){
     temp_u=0.0;
     temp_v=0.0;
     for(j=0; j<N; j++){
-       temp_u=temp_u+W[i][j]*su[j];
-       temp_v=temp_v+W[i][j]*sv[j];
+       temp_u += W[i][j]*su[j];
+       temp_v += W[i][j]*sv[j];
       }
     su_d[i]=(tanh(mu*(a*su[i]-b*sv[i]+temp_u+Su))-su[i])/Tu;
     sv_d[i]=(tanh(mu*(c*su[i]-d*sv[i]+temp_v+Sv))-sv[i])/Tv;
     }
-}
+  }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  set_du_dv();
   for(i=0;i<N;i++){
-    su[i]=su_d[i]*T;
-    sv[i]=sv_d[i]*T;
+    su[i] += su_d[i]*T;
+    sv[i] += sv_d[i]*T;
     sy_h[i]=p*(su[i]-sv[i]);
     sy_h_d[i]=p*(su_d[i]-sv_d[i]);
     if(sy_h_d[i]<0){
@@ -123,32 +125,30 @@ void loop() {
     out[i]=X+R_h*sin(sy_h[i]);
     out[i+4]=R_k*sin(sy_k[i]);
     }
-  //servo0.write( 90 + round(out_deg[0]) );
-  //servo1.write( 90 + round(out_deg[1]) );
-  //servo2.write( 90 + round(out_deg[2]) );
-  //servo3.write( 90 + round(out_deg[3]) ); 
-  //servo4.write( 90 + round(out_deg[4]) );
-  //servo5.write( 90 + round(out_deg[5]) );
-  //servo6.write( 90 + round(out_deg[6]) );
-  //servo7.write( 90 + round(out_deg[7]) );
-  
+  servo0.write( 90 + round(out[0]) );
+  servo1.write( 90 + round(out[1]) );
+  servo2.write( 90 + round(out[2]) );
+  servo3.write( 90 + round(out[3]) ); 
+  servo4.write( 90 + round(out[4]) );
+  servo5.write( 90 + round(out[5]) );
+  servo6.write( 90 + round(out[6]) );
+  servo7.write( 90 + round(out[7]) );
+  /**
   Serial.print(sy_h[0]);
   Serial.print("\t");
   Serial.print(sy_h[1]);
   Serial.print("\t");
   Serial.print(sy_h[2]);
   Serial.print("\t");
-  Serial.print(sy_h[3]);
-  Serial.print("\t");
+  Serial.println(sy_h[3]);
+
   Serial.print(sy_k[0]);
   Serial.print("\t");
   Serial.print(sy_k[1]);
   Serial.print("\t");
   Serial.print(sy_k[2]);
   Serial.print("\t");
-  Serial.println(sy_k[3]);  
-  
-  set_du_dv();
+  Serial.println(sy_k[3]); **/
   
   while(nextLoop > micros());  //wait until the end of the time interval
   nextLoop += LPERIOD;  
